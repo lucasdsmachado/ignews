@@ -14,12 +14,12 @@ export function SubscribeButton({ priceId } : SubscribeButtonProps) {
   const router = useRouter();
 
   async function handleSubscribe() {
-    if (!session){
+    if (!session.data){
       signIn('github')
       return;
     }
 
-    if (session.data.activeSubscription){
+    if (session.data?.activeSubscription){
       router.push('/posts');
       return;
     }
@@ -27,9 +27,9 @@ export function SubscribeButton({ priceId } : SubscribeButtonProps) {
 
      try {
        const response = await api.post('/subscribe');
-       
+
        const { sessionId } = response.data;
-      
+
        const stripe = await getStripeJs();
 
        await stripe.redirectToCheckout( {sessionId: sessionId} )
